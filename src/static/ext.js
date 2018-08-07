@@ -1,261 +1,417 @@
-const fs = require('fs');
-const str = `ABAP                       (abap)
-ActionScript               (as)
-Ada                        (ada, adb, ads, pad)
-ADSO/IDSM                  (adso)
-Agda                       (agda, lagda)
-AMPLE                      (ample, dofile, startup)
-Ant                        (build.xml, build.xml)
-ANTLR Grammar              (g, g4)
-Apex Trigger               (trigger)
-Arduino Sketch             (ino, pde)
-AsciiDoc                   (adoc, asciidoc)
-ASP                        (asa, asp)
-ASP.NET                    (asax, ascx, asmx, aspx, master, sitemap, webinfo)
-AspectJ                    (aj)
-Assembly                   (asm, S, s)
-AutoHotkey                 (ahk)
-awk                        (awk)
-Blade                      (blade.php)
-Bourne Again Shell         (bash)
-Bourne Shell               (sh)
-BrightScript               (brs)
-builder                    (xml.builder)
-C                          (c, ec, pgc)
-C Shell                    (csh, tcsh)
-C#                         (cs)
-C++                        (C, c++, cc, CPP, cpp, cxx, pcc)
-C/C++ Header               (H, h, hh, hpp, hxx)
-CCS                        (ccs)
-Chapel                     (chpl)
-Clean                      (dcl, icl)
-Clojure                    (clj)
-ClojureC                   (cljc)
-ClojureScript              (cljs)
-CMake                      (cmake, CMakeLists.txt)
-COBOL                      (cbl, CBL, COB, cob)
-CoffeeScript               (coffee)
-ColdFusion                 (cfm)
-ColdFusion CFScript        (cfc)
-Coq                        (v)
-Crystal                    (cr)
-CSON                       (cson)
-CSS                        (css)
-Cucumber                   (feature)
-CUDA                       (cu, cuh)
-Cython                     (pyx)
-D                          (d)
-DAL                        (da)
-Dart                       (dart)
-diff                       (diff)
-DITA                       (dita)
-DOORS Extension Language   (dxl)
-DOS Batch                  (bat, BAT, BTM, btm, cmd, CMD)
-Drools                     (drl)
-DTD                        (dtd)
-dtrace                     (d)
-ECPP                       (ecpp)
-EEx                        (eex)
-Elixir                     (ex, exs)
-Elm                        (elm)
-ERB                        (erb, ERB)
-Erlang                     (erl, hrl)
-Expect                     (exp)
-F#                         (fsi, fs, fs)
-F# Script                  (fsx)
-Fish Shell                 (fish)
-Focus                      (focexec)
-Forth                      (4th, e4, f83, fb, forth, fpm, fr, frt, ft, fth, rx, fs, f, for)
-Fortran 77                 (F, f77, F77, FOR, ftn, FTN, pfo, f, for)
-Fortran 90                 (F90, f90)
-Fortran 95                 (f95, F95)
-Freemarker Template        (ftl)
-GDScript                   (gd)
-Gencat NLS                 (msg)
-Glade                      (glade, ui)
-GLSL                       (comp, frag, geom, glsl, tesc, tese, vert)
-Go                         (go)
-Grails                     (gsp)
-GraphQL                    (gql, graphql)
-Groovy                     (gant, gradle, groovy)
-Haml                       (haml)
-Handlebars                 (handlebars, hbs)
-Harbour                    (hb)
-Haskell                    (hs, lhs)
-Haxe                       (hx)
-HCL                        (hcl, nomad, tf)
-HLSL                       (cg, cginc, hlsl, shader)
-HTML                       (htm, html)
-IDL                        (idl, pro)
-Idris                      (idr)
-INI                        (ini)
-InstallShield              (ism)
-Java                       (java)
-JavaScript                 (es6, js)
-JavaServer Faces           (jsf)
-JCL                        (jcl)
-JSON                       (json)
-JSP                        (jsp, jspf)
-JSX                        (jsx)
-Julia                      (jl)
-Kermit                     (ksc)
-Korn Shell                 (ksh)
-Kotlin                     (kt, kts)
-Lean                       (lean)
-LESS                       (less)
-lex                        (l)
-LFE                        (lfe)
-liquid                     (liquid)
-Lisp                       (asd, el, lisp, lsp, cl, jl)
-Literate Idris             (lidr)
-LiveLink OScript           (oscript)
-Logtalk                    (lgt, logtalk)
-Lua                        (lua)
-m4                         (ac, m4)
-make                       (am, Gnumakefile, gnumakefile, Makefile, makefile, mk)
-Mako                       (mako)
-Markdown                   (md)
-Mathematica                (mt, wl, wlt, m)
-MATLAB                     (m)
-Maven                      (pom, pom.xml)
-Modula3                    (i3, ig, m3, mg)
-MSBuild script             (csproj, vbproj, vcproj, wdproj, wixproj)
-MUMPS                      (mps, m)
-Mustache                   (mustache)
-MXML                       (mxml)
-NAnt script                (build)
-NASTRAN DMAP               (dmap)
-Nemerle                    (n)
-Nim                        (nim)
-Objective C                (m)
-Objective C++              (mm)
-OCaml                      (ml, mli, mll, mly)
-OpenCL                     (cl)
-Oracle Forms               (fmt)
-Oracle PL/SQL              (bod, fnc, prc, spc, trg)
-Oracle Reports             (rex)
-Pascal                     (dpr, p, pas)
-Pascal/Puppet              (pp)
-Patran Command Language    (pcl, ses)
-Perl                       (perl, plh, plx, pm, pm6, pl)
-PHP                        (php, php3, php4, php5, phtml)
-PHP/Pascal                 (inc)
-Pig Latin                  (pig)
-PL/I                       (pl1)
-PL/M                       (lit, plm)
-PO File                    (po)
-PowerBuilder               (sra, srf, srm, srs, sru, srw)
-PowerShell                 (ps1, psd1, psm1)
-ProGuard                   (pro)
-Prolog                     (P, pl, pro)
-Protocol Buffers           (proto)
-Pug                        (pug)
-PureScript                 (purs)
-Python                     (py)
-QML                        (qml)
-Qt                         (ui)
-Qt Linguist                (ts)
-Qt Project                 (pro)
-R                          (R, r)
-Racket                     (rkt, rktl, scrbl)
-RAML                       (raml)
-RapydScript                (pyj)
-Razor                      (cshtml)
-Rexx                       (rexx)
-Rmd                        (Rmd)
-RobotFramework             (robot, tsv)
-Ruby                       (rake, rb)
-Ruby HTML                  (rhtml)
-Rust                       (rs)
-SAS                        (sas)
-Sass                       (sass, scss)
-Scala                      (scala)
-Scheme                     (sc, sch, scm, sld, sls, ss)
-sed                        (sed)
-SKILL                      (il)
-SKILL++                    (ils)
-Skylark                    (bzl)
-Slice                      (ice)
-Slim                       (slim)
-Smalltalk                  (st, cs)
-Smarty                     (smarty, tpl)
-Softbridge Basic           (SBL, sbl)
-Solidity                   (sol)
-Specman e                  (e)
-SQL                        (psql, sql, SQL)
-SQL Data                   (data.sql)
-SQL Stored Procedure       (spc.sql, spoc.sql, sproc.sql, udf.sql)
-Standard ML                (fun, sig, sml)
-Stata                      (do, DO)
-Stylus                     (styl)
-Swift                      (swift)
-SWIG                       (i)
-Tcl/Tk                     (itk, tcl, tk)
-Teamcenter met             (met)
-Teamcenter mth             (mth)
-TeX                        (bst, dtx, sty, tex)
-TITAN Project File Information (tpd)
-Titanium Style Sheet       (tss)
-TOML                       (toml)
-TTCN                       (ttcn, ttcn2, ttcn3, ttcnpp)
-Twig                       (twig)
-TypeScript                 (tsx, ts)
-Unity-Prefab               (mat, prefab)
-Vala                       (vala)
-Vala Header                (vapi)
-Velocity Template Language (vm)
-Verilog-SystemVerilog      (sv, svh, v)
-VHDL                       (VHD, vhd, vhdl, VHDL)
-vim script                 (vim)
-Visual Basic               (bas, cls, ctl, dsr, frm, VB, vb, VBA, vba, VBS, vbs)
-Visual Fox Pro             (SCA, sca)
-Visualforce Component      (component)
-Visualforce Page           (page)
-Vuejs Component            (vue)
-Windows Message File       (mc)
-Windows Module Definition  (def)
-Windows Resource File      (rc, rc2)
-WiX include                (wxi)
-WiX source                 (wxs)
-WiX string localization    (wxl)
-XAML                       (xaml)
-xBase                      (prg)
-xBase Header               (ch)
-XHTML                      (xhtml)
-XMI                        (XMI, xmi)
-XML                        (xml, XML)
-XQuery                     (xq, xquery)
-XSD                        (XSD, xsd)
-XSLT                       (XSL, xsl, XSLT, xslt)
-yacc                       (y)
-YAML                       (yaml, yml)
-zsh                        (zsh)`;
-
-const list = str.split('\n');
-
-// console.log(list.length)
-// console.log(list[0].replace(/\s+/g, '='));
-
-const obj = {};
-
-list.map(item => {
-    const newLine = item.split('(');
-
-    // const newLine = item.replace(/\s\s\s*/g, '=').split('=');
-    const line1 = newLine[0].replace(/\s*$/, '');
-    // console.log(newLine[1], newLine[0]);
-    const line2 = newLine[1].replace(')','').replace(/\s+/g, '');
-    const valueList = line2.split(',');
-    valueList.map(val => {
-        obj[val] = line1;
-    })
-})
-console.log(JSON.stringify(obj));
-
-fs.writeFile('./ext.json', JSON.stringify(obj), err => {
-    if(err) {
-        console.log(err);
-        return;
-    }
-    console.log('success');
-});
+module.exports = {
+    "abap": "ABAP",
+    "as": "ActionScript",
+    "ada": "Ada",
+    "adb": "Ada",
+    "ads": "Ada",
+    "pad": "Ada",
+    "adso": "ADSO/IDSM",
+    "agda": "Agda",
+    "lagda": "Agda",
+    "ample": "AMPLE",
+    "dofile": "AMPLE",
+    "startup": "AMPLE",
+    "build.xml": "Ant",
+    "g": "ANTLR Grammar",
+    "g4": "ANTLR Grammar",
+    "trigger": "Apex Trigger",
+    "ino": "Arduino Sketch",
+    "pde": "Arduino Sketch",
+    "adoc": "AsciiDoc",
+    "asciidoc": "AsciiDoc",
+    "asa": "ASP",
+    "asp": "ASP",
+    "asax": "ASP.NET",
+    "ascx": "ASP.NET",
+    "asmx": "ASP.NET",
+    "aspx": "ASP.NET",
+    "master": "ASP.NET",
+    "sitemap": "ASP.NET",
+    "webinfo": "ASP.NET",
+    "aj": "AspectJ",
+    "asm": "Assembly",
+    "S": "Assembly",
+    "s": "Assembly",
+    "ahk": "AutoHotkey",
+    "awk": "awk",
+    "blade.php": "Blade",
+    "bash": "Bourne Again Shell",
+    "sh": "Bourne Shell",
+    "brs": "BrightScript",
+    "xml.builder": "builder",
+    "c": "C",
+    "ec": "C",
+    "pgc": "C",
+    "csh": "C Shell",
+    "tcsh": "C Shell",
+    "cs": "Smalltalk",
+    "C": "C++",
+    "c++": "C++",
+    "cc": "C++",
+    "CPP": "C++",
+    "cpp": "C++",
+    "cxx": "C++",
+    "pcc": "C++",
+    "H": "C/C++ Header",
+    "h": "C/C++ Header",
+    "hh": "C/C++ Header",
+    "hpp": "C/C++ Header",
+    "hxx": "C/C++ Header",
+    "ccs": "CCS",
+    "chpl": "Chapel",
+    "dcl": "Clean",
+    "icl": "Clean",
+    "clj": "Clojure",
+    "cljc": "ClojureC",
+    "cljs": "ClojureScript",
+    "cmake": "CMake",
+    "CMakeLists.txt": "CMake",
+    "cbl": "COBOL",
+    "CBL": "COBOL",
+    "COB": "COBOL",
+    "cob": "COBOL",
+    "coffee": "CoffeeScript",
+    "cfm": "ColdFusion",
+    "cfc": "ColdFusion CFScript",
+    "v": "Verilog-SystemVerilog",
+    "cr": "Crystal",
+    "cson": "CSON",
+    "css": "CSS",
+    "feature": "Cucumber",
+    "cu": "CUDA",
+    "cuh": "CUDA",
+    "pyx": "Cython",
+    "d": "dtrace",
+    "da": "DAL",
+    "dart": "Dart",
+    "diff": "diff",
+    "dita": "DITA",
+    "dxl": "DOORS Extension Language",
+    "bat": "DOS Batch",
+    "BAT": "DOS Batch",
+    "BTM": "DOS Batch",
+    "btm": "DOS Batch",
+    "cmd": "DOS Batch",
+    "CMD": "DOS Batch",
+    "drl": "Drools",
+    "dtd": "DTD",
+    "ecpp": "ECPP",
+    "eex": "EEx",
+    "ex": "Elixir",
+    "exs": "Elixir",
+    "elm": "Elm",
+    "erb": "ERB",
+    "ERB": "ERB",
+    "erl": "Erlang",
+    "hrl": "Erlang",
+    "exp": "Expect",
+    "fsi": "F#",
+    "fs": "Forth",
+    "fsx": "F# Script",
+    "fish": "Fish Shell",
+    "focexec": "Focus",
+    "4th": "Forth",
+    "e4": "Forth",
+    "f83": "Forth",
+    "fb": "Forth",
+    "forth": "Forth",
+    "fpm": "Forth",
+    "fr": "Forth",
+    "frt": "Forth",
+    "ft": "Forth",
+    "fth": "Forth",
+    "rx": "Forth",
+    "f": "Fortran 77",
+    "for": "Fortran 77",
+    "F": "Fortran 77",
+    "f77": "Fortran 77",
+    "F77": "Fortran 77",
+    "FOR": "Fortran 77",
+    "ftn": "Fortran 77",
+    "FTN": "Fortran 77",
+    "pfo": "Fortran 77",
+    "F90": "Fortran 90",
+    "f90": "Fortran 90",
+    "f95": "Fortran 95",
+    "F95": "Fortran 95",
+    "ftl": "Freemarker Template",
+    "gd": "GDScript",
+    "msg": "Gencat NLS",
+    "glade": "Glade",
+    "ui": "Qt",
+    "comp": "GLSL",
+    "frag": "GLSL",
+    "geom": "GLSL",
+    "glsl": "GLSL",
+    "tesc": "GLSL",
+    "tese": "GLSL",
+    "vert": "GLSL",
+    "go": "Go",
+    "gsp": "Grails",
+    "gql": "GraphQL",
+    "graphql": "GraphQL",
+    "gant": "Groovy",
+    "gradle": "Groovy",
+    "groovy": "Groovy",
+    "haml": "Haml",
+    "handlebars": "Handlebars",
+    "hbs": "Handlebars",
+    "hb": "Harbour",
+    "hs": "Haskell",
+    "lhs": "Haskell",
+    "hx": "Haxe",
+    "hcl": "HCL",
+    "nomad": "HCL",
+    "tf": "HCL",
+    "cg": "HLSL",
+    "cginc": "HLSL",
+    "hlsl": "HLSL",
+    "shader": "HLSL",
+    "htm": "HTML",
+    "html": "HTML",
+    "idl": "IDL",
+    "pro": "Qt Project",
+    "idr": "Idris",
+    "ini": "INI",
+    "ism": "InstallShield",
+    "java": "Java",
+    "es6": "JavaScript",
+    "js": "JavaScript",
+    "jsf": "JavaServer Faces",
+    "jcl": "JCL",
+    "json": "JSON",
+    "jsp": "JSP",
+    "jspf": "JSP",
+    "jsx": "JSX",
+    "jl": "Lisp",
+    "ksc": "Kermit",
+    "ksh": "Korn Shell",
+    "kt": "Kotlin",
+    "kts": "Kotlin",
+    "lean": "Lean",
+    "less": "LESS",
+    "l": "lex",
+    "lfe": "LFE",
+    "liquid": "liquid",
+    "asd": "Lisp",
+    "el": "Lisp",
+    "lisp": "Lisp",
+    "lsp": "Lisp",
+    "cl": "OpenCL",
+    "lidr": "Literate Idris",
+    "oscript": "LiveLink OScript",
+    "lgt": "Logtalk",
+    "logtalk": "Logtalk",
+    "lua": "Lua",
+    "ac": "m4",
+    "m4": "m4",
+    "am": "make",
+    "Gnumakefile": "make",
+    "gnumakefile": "make",
+    "Makefile": "make",
+    "makefile": "make",
+    "mk": "make",
+    "mako": "Mako",
+    "md": "Markdown",
+    "mt": "Mathematica",
+    "wl": "Mathematica",
+    "wlt": "Mathematica",
+    "m": "Objective C",
+    "pom": "Maven",
+    "pom.xml": "Maven",
+    "i3": "Modula3",
+    "ig": "Modula3",
+    "m3": "Modula3",
+    "mg": "Modula3",
+    "csproj": "MSBuild script",
+    "vbproj": "MSBuild script",
+    "vcproj": "MSBuild script",
+    "wdproj": "MSBuild script",
+    "wixproj": "MSBuild script",
+    "mps": "MUMPS",
+    "mustache": "Mustache",
+    "mxml": "MXML",
+    "build": "NAnt script",
+    "dmap": "NASTRAN DMAP",
+    "n": "Nemerle",
+    "nim": "Nim",
+    "mm": "Objective C++",
+    "ml": "OCaml",
+    "mli": "OCaml",
+    "mll": "OCaml",
+    "mly": "OCaml",
+    "fmt": "Oracle Forms",
+    "bod": "Oracle PL/SQL",
+    "fnc": "Oracle PL/SQL",
+    "prc": "Oracle PL/SQL",
+    "spc": "Oracle PL/SQL",
+    "trg": "Oracle PL/SQL",
+    "rex": "Oracle Reports",
+    "dpr": "Pascal",
+    "p": "Pascal",
+    "pas": "Pascal",
+    "pp": "Pascal/Puppet",
+    "pcl": "Patran Command Language",
+    "ses": "Patran Command Language",
+    "perl": "Perl",
+    "plh": "Perl",
+    "plx": "Perl",
+    "pm": "Perl",
+    "pm6": "Perl",
+    "pl": "Prolog",
+    "php": "PHP",
+    "php3": "PHP",
+    "php4": "PHP",
+    "php5": "PHP",
+    "phtml": "PHP",
+    "inc": "PHP/Pascal",
+    "pig": "Pig Latin",
+    "pl1": "PL/I",
+    "lit": "PL/M",
+    "plm": "PL/M",
+    "po": "PO File",
+    "sra": "PowerBuilder",
+    "srf": "PowerBuilder",
+    "srm": "PowerBuilder",
+    "srs": "PowerBuilder",
+    "sru": "PowerBuilder",
+    "srw": "PowerBuilder",
+    "ps1": "PowerShell",
+    "psd1": "PowerShell",
+    "psm1": "PowerShell",
+    "P": "Prolog",
+    "proto": "Protocol Buffers",
+    "pug": "Pug",
+    "purs": "PureScript",
+    "py": "Python",
+    "qml": "QML",
+    "ts": "TypeScript",
+    "R": "R",
+    "r": "R",
+    "rkt": "Racket",
+    "rktl": "Racket",
+    "scrbl": "Racket",
+    "raml": "RAML",
+    "pyj": "RapydScript",
+    "cshtml": "Razor",
+    "rexx": "Rexx",
+    "Rmd": "Rmd",
+    "robot": "RobotFramework",
+    "tsv": "RobotFramework",
+    "rake": "Ruby",
+    "rb": "Ruby",
+    "rhtml": "Ruby HTML",
+    "rs": "Rust",
+    "sas": "SAS",
+    "sass": "Sass",
+    "scss": "Sass",
+    "scala": "Scala",
+    "sc": "Scheme",
+    "sch": "Scheme",
+    "scm": "Scheme",
+    "sld": "Scheme",
+    "sls": "Scheme",
+    "ss": "Scheme",
+    "sed": "sed",
+    "il": "SKILL",
+    "ils": "SKILL++",
+    "bzl": "Skylark",
+    "ice": "Slice",
+    "slim": "Slim",
+    "st": "Smalltalk",
+    "smarty": "Smarty",
+    "tpl": "Smarty",
+    "SBL": "Softbridge Basic",
+    "sbl": "Softbridge Basic",
+    "sol": "Solidity",
+    "e": "Specman e",
+    "psql": "SQL",
+    "sql": "SQL",
+    "SQL": "SQL",
+    "data.sql": "SQL Data",
+    "spc.sql": "SQL Stored Procedure",
+    "spoc.sql": "SQL Stored Procedure",
+    "sproc.sql": "SQL Stored Procedure",
+    "udf.sql": "SQL Stored Procedure",
+    "fun": "Standard ML",
+    "sig": "Standard ML",
+    "sml": "Standard ML",
+    "do": "Stata",
+    "DO": "Stata",
+    "styl": "Stylus",
+    "swift": "Swift",
+    "i": "SWIG",
+    "itk": "Tcl/Tk",
+    "tcl": "Tcl/Tk",
+    "tk": "Tcl/Tk",
+    "met": "Teamcenter met",
+    "mth": "Teamcenter mth",
+    "bst": "TeX",
+    "dtx": "TeX",
+    "sty": "TeX",
+    "tex": "TeX",
+    "tpd": "TITAN Project File Information",
+    "tss": "Titanium Style Sheet",
+    "toml": "TOML",
+    "ttcn": "TTCN",
+    "ttcn2": "TTCN",
+    "ttcn3": "TTCN",
+    "ttcnpp": "TTCN",
+    "twig": "Twig",
+    "tsx": "TypeScript",
+    "mat": "Unity-Prefab",
+    "prefab": "Unity-Prefab",
+    "vala": "Vala",
+    "vapi": "Vala Header",
+    "vm": "Velocity Template Language",
+    "sv": "Verilog-SystemVerilog",
+    "svh": "Verilog-SystemVerilog",
+    "VHD": "VHDL",
+    "vhd": "VHDL",
+    "vhdl": "VHDL",
+    "VHDL": "VHDL",
+    "vim": "vim script",
+    "bas": "Visual Basic",
+    "cls": "Visual Basic",
+    "ctl": "Visual Basic",
+    "dsr": "Visual Basic",
+    "frm": "Visual Basic",
+    "VB": "Visual Basic",
+    "vb": "Visual Basic",
+    "VBA": "Visual Basic",
+    "vba": "Visual Basic",
+    "VBS": "Visual Basic",
+    "vbs": "Visual Basic",
+    "SCA": "Visual Fox Pro",
+    "sca": "Visual Fox Pro",
+    "component": "Visualforce Component",
+    "page": "Visualforce Page",
+    "vue": "Vuejs Component",
+    "mc": "Windows Message File",
+    "def": "Windows Module Definition",
+    "rc": "Windows Resource File",
+    "rc2": "Windows Resource File",
+    "wxi": "WiX include",
+    "wxs": "WiX source",
+    "wxl": "WiX string localization",
+    "xaml": "XAML",
+    "prg": "xBase",
+    "ch": "xBase Header",
+    "xhtml": "XHTML",
+    "XMI": "XMI",
+    "xmi": "XMI",
+    "xml": "XML",
+    "XML": "XML",
+    "xq": "XQuery",
+    "xquery": "XQuery",
+    "XSD": "XSD",
+    "xsd": "XSD",
+    "XSL": "XSLT",
+    "xsl": "XSLT",
+    "XSLT": "XSLT",
+    "xslt": "XSLT",
+    "y": "yacc",
+    "yaml": "YAML",
+    "yml": "YAML",
+    "zsh": "zsh"
+}
