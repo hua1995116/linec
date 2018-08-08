@@ -1,6 +1,6 @@
 {
   "name": "linec",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "line count",
   "main": "index.js",
   "bin": {
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/hua1995116/linec#readme",
   "dependencies": {
     "cli-table": "^0.3.1",
-    "commander": "^2.17.1"
+    "commander": "^2.17.1",
+    "ignore": "^4.0.3"
   }
 }
