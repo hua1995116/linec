@@ -68,9 +68,6 @@ class StreamLoad {
         }
         
         for (let i = 0; i < this.clearLine; i++) {
-			if (i > 0) {
-				this.stream.moveCursor(0, -1);
-            }
             this.stream.moveCursor(0, -1);
             this.stream.clearLine();
 			this.stream.cursorTo(0);
