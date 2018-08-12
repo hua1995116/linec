@@ -1,13 +1,13 @@
 {
   "name": "linec",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "line count",
   "main": "index.js",
   "bin": {
     "linec": "./lib/index.js"
   },
   "scripts": {
-    "start": "node ./lib/index.js",
+    "start": "node ./src/index.js",
     "build": "./node_modules/.bin/babel src --out-dir lib"
   },
   "repository": {

@@ -11,6 +11,7 @@ const ignoreFilter = require('./utils/ignore');
 const ROOTPATH = process.cwd();
 const START_TIME = new Date();
 const langInfo = {};
+let FILE_COUNT = 0;
 
 const tableColWidths = [15, 10, 10, 10];
 const tableColAligns = ['left', 'right', 'right', 'right'];
@@ -45,6 +46,43 @@ program
     .parse(process.argv);
 
 // console.log(program.ignore)
+
+class StreamLoad {
+    constructor(option) {
+        this.stream = option.stream;
+        this.text = option.text;
+        this.clearLine = 0;
+    }
+    setValue(value) {
+        this.text = value;
+        this.render();
+    }
+    render() {
+        this.clear();
+        this.clearLine++;
+        this.stream.write(`read ${this.text} file\n`);
+    }
+    clear() {
+        if(!this.stream.isTTY) {
+            return this;
+        }
+        
+        for (let i = 0; i < this.clearLine; i++) {
+			if (i > 0) {
+				this.stream.moveCursor(0, -1);
+            }
+            this.stream.moveCursor(0, -1);
+            this.stream.clearLine();
+			this.stream.cursorTo(0);
+        }
+        this.clearLine = 0;
+    }
+}
+
+const progress = new StreamLoad({
+    stream: process.stderr,
+    text: 0
+})
 
 /**
  * @param {path} dirPath
@@ -90,6 +128,10 @@ function getFile(dirPath) {
  * @param {path} currentPath
  */
 function fileCount(name, currentPath) {
+    FILE_COUNT++;
+    if(FILE_COUNT % 100 === 0) {
+        progress.setValue(FILE_COUNT);
+    }
     const lines = fs.readFileSync(currentPath, 'utf-8').split('\n');
     const rmLines = lines.filter(item => (item.trim() !== '' && item.trim() !== '\r'));
     const blankLines = lines.length - rmLines.length;
@@ -205,6 +247,8 @@ function outputTbale() {
     const totalTime = (new Date() - START_TIME) / 1000;
     const fileSpeed = (totalFiles/totalTime).toFixed(1);
     const lineSpeed = (totalFiles/totalTime).toFixed(1);
+
+    progress.clear();
 
     console.log(`T=${totalTime} s`, `(${fileSpeed} files/s`, `${lineSpeed} lines/s)`)
     console.log(header.toString())
