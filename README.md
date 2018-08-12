@@ -22,7 +22,7 @@ $ linec
 ```
 # 效果图
 
-![](http://cloud.qiufengh.com/md/1533720746406.jpg)
+![](http://cloud.qiufengh.com/md/1534064873673.jpg)
 
 # 说明
 

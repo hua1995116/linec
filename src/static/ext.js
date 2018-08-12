@@ -1,5 +1,3 @@
-"use strict";
-
 module.exports = {
     "abap": "ABAP",
     "as": "ActionScript",
@@ -416,4 +414,4 @@ module.exports = {
     "yaml": "YAML",
     "yml": "YAML",
     "zsh": "zsh"
-};
+}
