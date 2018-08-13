@@ -1,5 +1,3 @@
-# linec
-linec 是一个高颜值命令行统计代码行数的计数器。
 
 <p style="text-align:'center'">
     <img style="width: 600px;" src="http://cloud.qiufengh.com/md/linec.png"/>
