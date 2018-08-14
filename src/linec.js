@@ -189,7 +189,7 @@ function initTable() {
 /**
  * @desc handle max lines and push line into lines
  */
-function hanldeTable() {
+function hanldeTable(langInfo) {
     const tablesContent = [];
     let maxCount = 0;
     let maxIndex = -1;
@@ -220,7 +220,7 @@ function hanldeTable() {
 /**
  *@desc push data into table and ouput
  */
-function outputTbale() {
+function outputTbale(fileData) {
     const {
         header,
         content,
@@ -232,7 +232,7 @@ function outputTbale() {
         totalCode,
         totalBlank,
         tablesContent
-    } = hanldeTable();
+    } = hanldeTable(fileData);
     content.push(...tablesContent);
     bottom.push(['SUM'.cyan, `${totalFiles}`.cyan, `${totalBlank}`.cyan, `${totalCode}`.cyan]);
 
@@ -260,11 +260,12 @@ function getFileData(targetPath) {
  *@desc main entry
  */
 function linec() {
-    getFileData(ROOTPATH);
-    outputTbale();
+    const fileData = getFileData(ROOTPATH);
+    outputTbale(fileData);
 }
 
 module.exports = {
     getFileData,
+    hanldeTable,
     linec
 };
