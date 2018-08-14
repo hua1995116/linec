@@ -1,8 +1,7 @@
-
-<p style="text-align:'center'">
-    <img style="width: 600px;" src="http://cloud.qiufengh.com/md/linec.png"/>
-</p>
-<p algin="center">
+<h1 align="center">
+	<img height="300" src="http://cloud.qiufengh.com/md/linec.png" alt="linec" />
+</h1>
+<p align="center">
     <a href="https://npmcharts.com/compare/linec?minimal=true" rel="nofollow"><img src="https://img.shields.io/npm/dm/linec.svg" style="max-width:100%;"></a>
     <a href="https://www.npmjs.com/package/linec" rel="nofollow"><img src="https://img.shields.io/npm/v/linec.svg" style="max-width:100%;"></a>
     <a href="https://www.npmjs.com/package/linec" rel="nofollow"><img src="https://img.shields.io/npm/l/linec.svg?style=flat" style="max-width:100%;"></a>
