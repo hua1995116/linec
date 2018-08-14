@@ -30,8 +30,8 @@ $ linec
 
 Va.b.c
 
-a is change struct
+1. a is change struct
 
-b is add feature
+2. b is add feature
 
-c is optimize code or doc
+3. c is optimize code or doc
