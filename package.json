@@ -7,6 +7,7 @@
     "linec": "./lib/index.js"
   },
   "scripts": {
+    "test": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha && ./node_modules/.bin/codecov",
     "start": "node ./src/index.js",
     "build": "./node_modules/.bin/babel src --out-dir lib"
   },
@@ -32,6 +33,10 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-3": "^6.24.1"
+    "babel-preset-stage-3": "^6.24.1",
+    "chai": "^4.1.2",
+    "codecov": "^3.0.4",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0"
   }
 }

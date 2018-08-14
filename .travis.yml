@@ -1,0 +1,9 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+sudo: false
+
+before_script:
+  - npm install
