@@ -25,7 +25,7 @@ $ linec
 
 导出到html
 ```shell
-$ linec -h
+$ linec -o
 ```
 
 # 功能

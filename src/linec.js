@@ -323,7 +323,7 @@ function outputHtml(fileData, totalData) {
 function linec() {
     const fileData = getFileData(ROOTPATH);
     const totalData = hanldeTable(fileData);
-    if(program.html) {
+    if(program.output) {
         outputHtml(fileData, totalData);
     } else {
         outputTbale(totalData);
