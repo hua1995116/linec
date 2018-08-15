@@ -42,7 +42,7 @@ program
     .version('0.1.0')
     .option('-i, --ignore [dir]', 'ignore dir')
     .option('-p, --path [dir]', 'ignore dir')
-    .option('-h, --html', 'ouput html')
+    .option('-o, --output', 'ouput html')
     .parse(process.argv);
 
 // console.log(program.html)
