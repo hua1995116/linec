@@ -42,9 +42,10 @@ program
     .version('0.1.0')
     .option('-i, --ignore [dir]', 'ignore dir')
     .option('-p, --path [dir]', 'ignore dir')
+    .option('-h, --html', 'ouput html')
     .parse(process.argv);
 
-// console.log(program.path)
+// console.log(program.html)
 
 class StreamLoad {
     constructor(option) {
@@ -62,14 +63,14 @@ class StreamLoad {
         this.stream.write(`read ${this.text} file\n`);
     }
     clear() {
-        if(!this.stream.isTTY) {
+        if (!this.stream.isTTY) {
             return this;
         }
-        
+
         for (let i = 0; i < this.clearLine; i++) {
             this.stream.moveCursor(0, -1);
             this.stream.clearLine();
-			this.stream.cursorTo(0);
+            this.stream.cursorTo(0);
         }
         this.clearLine = 0;
     }
@@ -93,7 +94,7 @@ function getFile(dirPath) {
             currentPath = path.join(dirPath, item),
             isFile = fs.statSync(currentPath).isFile(),
             isDir = fs.statSync(currentPath).isDirectory();
-        if(ignoreFilter(currentPath)) {
+        if (ignoreFilter(currentPath)) {
             return;
         }
         if (isFile) {
@@ -125,7 +126,7 @@ function getFile(dirPath) {
  */
 function fileCount(name, currentPath) {
     FILE_COUNT++;
-    if(FILE_COUNT % 100 === 0) {
+    if (FILE_COUNT % 100 === 0) {
         progress.setValue(FILE_COUNT);
     }
     const lines = fs.readFileSync(currentPath, 'utf-8').split('\n');
@@ -193,6 +194,7 @@ function hanldeTable(langInfo) {
     const tablesContent = [];
     let maxCount = 0;
     let maxIndex = -1;
+    let maxName = null;
     let totalFiles = 0;
     let totalBlank = 0;
     let totalCode = 0;
@@ -200,6 +202,7 @@ function hanldeTable(langInfo) {
         if (maxCount < langInfo[item].totalLines) {
             maxCount = langInfo[item].totalLines;
             maxIndex = index;
+            maxName = item;
         }
         totalFiles += langInfo[item].file;
         totalBlank += langInfo[item].blankLines;
@@ -213,14 +216,15 @@ function hanldeTable(langInfo) {
         totalFiles,
         totalCode,
         totalBlank,
-        tablesContent
+        tablesContent,
+        maxName
     }
 }
 
 /**
  *@desc push data into table and ouput
  */
-function outputTbale(fileData) {
+function outputTbale(totalData) {
     const {
         header,
         content,
@@ -232,13 +236,15 @@ function outputTbale(fileData) {
         totalCode,
         totalBlank,
         tablesContent
-    } = hanldeTable(fileData);
+    } = totalData;
     content.push(...tablesContent);
     bottom.push(['SUM'.cyan, `${totalFiles}`.cyan, `${totalBlank}`.cyan, `${totalCode}`.cyan]);
 
-    const totalTime = (new Date() - START_TIME) / 1000;
-    const fileSpeed = (totalFiles/totalTime).toFixed(1);
-    const lineSpeed = (totalFiles/totalTime).toFixed(1);
+    const {
+        totalTime,
+        fileSpeed,
+        lineSpeed
+    } = handleSpeed(totalFiles);
 
     progress.clear();
 
@@ -246,6 +252,17 @@ function outputTbale(fileData) {
     console.log(header.toString())
     console.log(content.toString())
     console.log(bottom.toString())
+}
+
+function handleSpeed(totalFiles) {
+    const totalTime = (new Date() - START_TIME) / 1000;
+    const fileSpeed = (totalFiles / totalTime).toFixed(1);
+    const lineSpeed = (totalFiles / totalTime).toFixed(1);
+    return {
+        totalTime,
+        fileSpeed,
+        lineSpeed
+    }
 }
 
 /**
@@ -257,11 +274,60 @@ function getFileData(targetPath) {
 }
 
 /**
+ * @param {Object} fileData
+ * @param {Object} totalData
+ */
+function outputHtml(fileData, totalData) {
+    const {
+        totalFiles,
+        totalCode,
+        totalBlank,
+        maxName
+    } = totalData;
+
+    const {
+        totalTime,
+        fileSpeed,
+        lineSpeed
+    } = handleSpeed(totalFiles);
+    const speed = `<div class="speed">T=${totalTime} s, (${fileSpeed} files/s, ${lineSpeed} lines/s)</div>`
+    const header = `<div class="header">
+                        <div class="col col-4">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">code</div>
+                    </div>`;
+    let body = `<div class="body">`;
+
+    Object.keys(fileData).map(item => {
+        const languageItem = fileData[item];
+        let tr = '';
+        if(item === maxName) {
+            tr += `<div class="tr tr-max" style="color: ${languageItem.color}">`;
+        } else {
+            tr += `<div class="tr" style="color: ${languageItem.color}">`;
+        }
+        tr += `<div class="col col-4"">${item}</div><div class="col col-2">${languageItem.file}</div><div class="col col-2">${languageItem.blankLines}</div><div class="col col-2">${languageItem.totalLines}</div></div>`;
+        body += tr;
+    })
+    body += '</div>'
+
+    const bottom = `<div class="bottom">
+                        <div class="col col-4">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalCode}</div>
+                    </div>`;
+    const readData = fs.readFileSync('./src/static/template.html').toString();
+    const ouputHtml = readData.replace('$',speed + header + body + bottom )
+    fs.writeFileSync(`${process.cwd()}/output.html`, ouputHtml);
+}
+
+/**
  *@desc main entry
  */
 function linec() {
     const fileData = getFileData(ROOTPATH);
-    outputTbale(fileData);
+    const totalData = hanldeTable(fileData);
+    if(program.html) {
+        outputHtml(fileData, totalData);
+    } else {
+        outputTbale(totalData);
+    }
 }
 
 module.exports = {
