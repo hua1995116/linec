@@ -314,7 +314,9 @@ function outputHtml(fileData, totalData) {
                     </div>`;
     const readData = fs.readFileSync('./src/static/template.html').toString();
     const ouputHtml = readData.replace('$',speed + header + body + bottom )
-    fs.writeFileSync(`${process.cwd()}/output.html`, ouputHtml);
+    const outputPath = `${process.cwd()}/linec_output.html`;
+    fs.writeFileSync(outputPath, ouputHtml);
+    console.log(`导出成功,目录为${outputPath}`);
 }
 
 /**
