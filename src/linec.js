@@ -6,9 +6,9 @@ const colors = require('colors');
 const langColors = require('./static/colors');
 const langExt = require('./static/ext');
 const ignoreFilter = require('./utils/ignore');
-const ROOTPATH = process.cwd();
+let ROOTPATH = process.cwd();
 const START_TIME = new Date();
-const langInfo = {};
+let TYPE = 'table';
 let FILE_COUNT = 0;
 
 const tableColWidths = [15, 10, 10, 10];
@@ -41,10 +41,18 @@ const tableCars = {
 program
     .version('0.1.0')
     .option('-i, --ignore [dir]', 'ignore dir')
-    .option('-p, --path [dir]', 'ignore dir')
+    .option('-p, --path [dir]', 'linec dir')
     .option('-o, --output', 'ouput html')
     .parse(process.argv);
 
+
+if(program.path) {
+    ROOTPATH = program.path;
+}
+
+if(program.output) {
+    TYPE = 'html';
+}
 // console.log(program.html)
 
 class StreamLoad {
@@ -80,61 +88,6 @@ const progress = new StreamLoad({
     stream: process.stderr,
     text: 0
 })
-
-/**
- * @param {path} dirPath
- */
-function getFile(dirPath) {
-
-    const files = fs.readdirSync(dirPath);
-
-    files.forEach((item) => {
-
-        const extname = path.extname(item).replace('\.', ''),
-            currentPath = path.join(dirPath, item),
-            isFile = fs.statSync(currentPath).isFile(),
-            isDir = fs.statSync(currentPath).isDirectory();
-        if (ignoreFilter(currentPath)) {
-            return;
-        }
-        if (isFile) {
-            const languageName = langExt[extname] || 'unkonw';
-            if (languageName === 'unkonw') {
-                return;
-            }
-            if (langInfo[languageName]) {
-                langInfo[languageName].file++;
-            } else {
-                langInfo[languageName] = {
-                    file: 1,
-                    blankLines: 0,
-                    totalLines: 0,
-                    color: langColors[languageName] || '#fff'
-                }
-            }
-            fileCount(languageName, currentPath)
-        } else if (isDir) {
-            getFile(currentPath);
-        }
-    })
-}
-
-/**
- * @desc
- * @param {String} name
- * @param {path} currentPath
- */
-function fileCount(name, currentPath) {
-    FILE_COUNT++;
-    if (FILE_COUNT % 100 === 0) {
-        progress.setValue(FILE_COUNT);
-    }
-    const lines = fs.readFileSync(currentPath, 'utf-8').split('\n');
-    const rmLines = lines.filter(item => (item.trim() !== '' && item.trim() !== '\r'));
-    const blankLines = lines.length - rmLines.length;
-    langInfo[name].totalLines += lines.length;
-    langInfo[name].blankLines += blankLines;
-}
 
 /**
  * @desc init table setting
@@ -252,6 +205,7 @@ function outputTbale(totalData) {
     console.log(header.toString())
     console.log(content.toString())
     console.log(bottom.toString())
+    return tablesContent;
 }
 
 function handleSpeed(totalFiles) {
@@ -266,10 +220,67 @@ function handleSpeed(totalFiles) {
 }
 
 /**
+ * @param {path} dirPath
+ */
+function getFile(dirPath, langInfo) {
+
+    const files = fs.readdirSync(dirPath);
+
+    files.forEach((item) => {
+
+        const extname = path.extname(item).replace('\.', ''),
+            currentPath = path.join(dirPath, item),
+            isFile = fs.statSync(currentPath).isFile(),
+            isDir = fs.statSync(currentPath).isDirectory();
+        if (ignoreFilter(currentPath)) {
+            return;
+        }
+        if (isFile) {
+            const languageName = langExt[extname] || 'unkonw';
+            if (languageName === 'unkonw') {
+                return;
+            }
+            if (langInfo[languageName]) {
+                langInfo[languageName].file++;
+            } else {
+                langInfo[languageName] = {
+                    file: 1,
+                    blankLines: 0,
+                    totalLines: 0,
+                    color: langColors[languageName] || '#fff'
+                }
+            }
+            fileCount(languageName, currentPath, langInfo)
+        } else if (isDir) {
+            getFile(currentPath, langInfo);
+        }
+    })
+}
+
+
+/**
+ * @desc
+ * @param {String} name
+ * @param {path} currentPath
+ */
+function fileCount(name, currentPath, langInfo) {
+    FILE_COUNT++;
+    if (FILE_COUNT % 100 === 0) {
+        progress.setValue(FILE_COUNT);
+    }
+    const lines = fs.readFileSync(currentPath, 'utf-8').split('\n');
+    const rmLines = lines.filter(item => (item.trim() !== '' && item.trim() !== '\r'));
+    const blankLines = lines.length - rmLines.length;
+    langInfo[name].totalLines += lines.length;
+    langInfo[name].blankLines += blankLines;
+}
+
+/**
  * @returns fileData
  */
 function getFileData(targetPath) {
-    getFile(targetPath);
+    const langInfo = {};
+    getFile(targetPath, langInfo);
     return langInfo;
 }
 
@@ -291,9 +302,7 @@ function outputHtml(fileData, totalData) {
         lineSpeed
     } = handleSpeed(totalFiles);
     const speed = `<div class="speed">T=${totalTime} s, (${fileSpeed} files/s, ${lineSpeed} lines/s)</div>`
-    const header = `<div class="header">
-                        <div class="col col-4">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">code</div>
-                    </div>`;
+    const header = `<div class="header"><div class="col col-4">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">code</div></div>`;
     let body = `<div class="body">`;
 
     Object.keys(fileData).map(item => {
@@ -309,27 +318,30 @@ function outputHtml(fileData, totalData) {
     })
     body += '</div>'
 
-    const bottom = `<div class="bottom">
-                        <div class="col col-4">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalCode}</div>
-                    </div>`;
+    const bottom = `<div class="bottom"><div class="col col-4">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalCode}</div></div>`;
     const readData = fs.readFileSync('./src/static/template.html').toString();
     const ouputHtml = readData.replace('$',speed + header + body + bottom )
     const outputPath = `${process.cwd()}/linec_output.html`;
     fs.writeFileSync(outputPath, ouputHtml);
     console.log(`导出成功,目录为${outputPath}`);
+    return header + body + bottom;
 }
 
 /**
  *@desc main entry
  */
-function linec() {
-    const fileData = getFileData(ROOTPATH);
+function linec(type, path) {
+    const p = path || ROOTPATH;
+    const t = type || TYPE;
+    const fileData = getFileData(p);
     const totalData = hanldeTable(fileData);
-    if(program.output) {
-        outputHtml(fileData, totalData);
-    } else {
-        outputTbale(totalData);
+    let output = null;
+    if(t === 'html') {
+        output = outputHtml(fileData, totalData);
+    } else if(t === 'table') {
+        output = outputTbale(totalData);
     }
+    return output;
 }
 
 module.exports = {

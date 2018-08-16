@@ -1,26 +1,26 @@
 const path = require('path');
 const assert = require('chai').assert;
 
-const {getFileData, hanldeTable} = require('../src/linec');
+const {linec, getFileData, hanldeTable} = require('../src/linec');
 
 describe('linec files test', () => {
-    it('can linec dir', () => {
+    it('can linec html', () => {
         const url = path.join(__dirname, '../example');
-        console.log(url);
 
-        const dirObj = JSON.stringify(getFileData(url));
+        const dirObj = linec('html', url)
 
-        const expectData = '{"CSS":{"file":1,"blankLines":0,"totalLines":4,"color":"#563d7c"},"JavaScript":{"file":1,"blankLines":0,"totalLines":1,"color":"#f1e05a"},"JSON":{"file":1,"blankLines":0,"totalLines":3,"color":"#fff"},"Markdown":{"file":1,"blankLines":0,"totalLines":1,"color":"#fff"}}';
+        const expectData = '<div class="header"><div class="col col-4">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">code</div></div><div class="body"><div class="tr tr-max" style="color: #563d7c"><div class="col col-4"">CSS</div><div class="col col-2">1</div><div class="col col-2">0</div><div class="col col-2">4</div></div><div class="tr" style="color: #f1e05a"><div class="col col-4"">JavaScript</div><div class="col col-2">1</div><div class="col col-2">0</div><div class="col col-2">1</div></div><div class="tr" style="color: #fff"><div class="col col-4"">JSON</div><div class="col col-2">1</div><div class="col col-2">0</div><div class="col col-2">3</div></div><div class="tr" style="color: #fff"><div class="col col-4"">Markdown</div><div class="col col-2">1</div><div class="col col-2">0</div><div class="col col-2">1</div></div></div><div class="bottom"><div class="col col-4">SUM</div><div class="col col-2">4</div><div class="col col-2">0</div><div class="col col-2">9</div></div>';
 
         assert.equal(dirObj, expectData);
 
     })
 
-    it('can linec table data', () => {
+    it('can linec table', () => {
+        const url = path.join(__dirname, '../example');
 
-        const dirObj = JSON.stringify(hanldeTable({"CSS":{"file":1,"blankLines":0,"totalLines":4,"color":"#563d7c"},"JavaScript":{"file":1,"blankLines":0,"totalLines":1,"color":"#f1e05a"},"JSON":{"file":1,"blankLines":0,"totalLines":3,"color":"#fff"},"Markdown":{"file":1,"blankLines":0,"totalLines":1,"color":"#fff"}}));
+        const dirObj = JSON.stringify(linec('table', url));
 
-        const expectData = '{"totalFiles":4,"totalCode":9,"totalBlank":0,"tablesContent":[["\\u001b[33mCSS\\u001b[39m","\\u001b[33m1\\u001b[39m","\\u001b[33m0\\u001b[39m","\\u001b[33m4\\u001b[39m"],["JavaScript",1,0,1],["JSON",1,0,3],["Markdown",1,0,1]],"maxName":"CSS"}';
+        const expectData = JSON.stringify([["\u001b[33mCSS\u001b[39m","\u001b[33m1\u001b[39m","\u001b[33m0\u001b[39m","\u001b[33m4\u001b[39m"],["JavaScript",1,0,1],["JSON",1,0,3],["Markdown",1,0,1]]);
 
         assert.equal(dirObj, expectData);
 
