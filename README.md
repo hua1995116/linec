@@ -37,6 +37,16 @@ $ linec -o
 - 支持导出html
 
 
+# 参数
+
+Usage: index [options]
+
+  Options:
+
+    -V, --version       output the version number
+    -p, --path [dir]    linec dir  (指定遍历目录))
+    -o, --output        ouput html (导出形式为html)
+    -h, --help          output usage information
 
 # 效果图
 基础模式
