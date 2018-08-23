@@ -6,16 +6,17 @@ const ROOTPATH = process.cwd();
 /**
  * @param {path} cPath
  */
-function handleIgnode(cPath) {
+function handleIgnode(cPath, dir) {
     try {
         const currentPath = path.join(ROOTPATH, '.gitignore');
         const fileData = fs.readFileSync(currentPath, 'utf-8');
         const ignoreList = fileData.split('\n');
-        const filterList = filterData(ignoreList);
+        const filterList = filterData(ignoreList).concat(dir);
         const ig = ignore().add(filterList);
         return ig.ignores(cPath);
     } catch (e) {
-        return false;
+        const ig = ignore().add(dir);
+        return ig.ignores(cPath);
     }
 }
 

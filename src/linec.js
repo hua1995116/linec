@@ -3,6 +3,7 @@ const fs = require('fs');
 const program = require('commander');
 const Table = require('cli-table');
 const colors = require('colors');
+const logSymbols = require('log-symbols');
 const langColors = require('./static/colors');
 const langExt = require('./static/ext');
 const ignoreFilter = require('./utils/ignore');
@@ -10,6 +11,7 @@ let ROOTPATH = process.cwd();
 const START_TIME = new Date();
 let TYPE = 'table';
 let FILE_COUNT = 0;
+const filterCustom = [];
 
 const tableColWidths = [15, 10, 10, 10];
 const tableColAligns = ['left', 'right', 'right', 'right'];
@@ -40,20 +42,33 @@ const tableCars = {
 
 program
     .version('0.1.0')
-    .option('-i, --ignore [dir]', 'ignore dir')
-    .option('-p, --path [dir]', 'linec dir')
-    .option('-o, --output', 'ouput html')
+    .option('-i, --ignore [path]', `ignore path | <example> linec -i './dist'` )
+    .option('-p, --path [path]', `linec path | <example> linec -p './dist'`)
+    .option('-o, --output', 'ouput html | <example> linec -o')
     .parse(process.argv);
-
-
-if(program.path) {
-    ROOTPATH = program.path;
-}
 
 if(program.output) {
     TYPE = 'html';
 }
-// console.log(program.html)
+
+if(program.path) {
+    ROOTPATH = program.path;
+    if(typeof ROOTPATH === 'boolean') {
+        console.log(logSymbols.error, 'linec -p <path/file> must have params'.red);
+        process.exit(0);
+    }
+}
+
+if(program.ignore) {
+    try {
+        const dirList = program.ignore.split(',');
+        console.log(dirList)
+        filterCustom.push(...dirList);
+    } catch(e) {
+        console.log(logSymbols.error, 'linec -i <dir/file> must have params'.red);
+        process.exit(0);
+    }
+}
 
 class StreamLoad {
     constructor(option) {
@@ -232,7 +247,7 @@ function getFile(dirPath, langInfo) {
             currentPath = path.join(dirPath, item),
             isFile = fs.statSync(currentPath).isFile(),
             isDir = fs.statSync(currentPath).isDirectory();
-        if (ignoreFilter(currentPath)) {
+        if (ignoreFilter(currentPath, filterCustom)) {
             return;
         }
         if (isFile) {

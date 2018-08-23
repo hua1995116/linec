@@ -36,18 +36,22 @@ $ linec -o
 - 显示多种颜色
 - 支持导出html
 - 自定义统计路径
+- 自定义忽略文件/目录
 
 
 # 参数
+
 
 Usage: index [options]
 
   Options:
 
-    -V, --version       output the version number
-    -p, --path [dir]    linec dir  (指定遍历目录))
-    -o, --output        ouput html (导出形式为html)
-    -h, --help          output usage information
+    -V, --version        output the version number
+    -i, --ignore [path]  ignore path | <example> linec -i './dist,./src'
+    -p, --path [path]    linec path | <example> linec -p './dist'
+    -o, --output         ouput html | <example> linec -o
+    -h, --help           output usage information
+
 
 # 效果图
 基础模式
