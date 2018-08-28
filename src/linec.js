@@ -12,6 +12,7 @@ const START_TIME = new Date();
 let TYPE = 'table';
 let FILE_COUNT = 0;
 const filterCustom = [];
+const suffixList = [];
 
 const tableColWidths = [15, 10, 10, 10];
 const tableColAligns = ['left', 'right', 'right', 'right'];
@@ -42,13 +43,24 @@ const tableCars = {
 
 program
     .version('0.1.0')
-    .option('-i, --ignore [path]', `ignore path | <example> linec -i './dist'` )
+    .option('-i, --ignore [path] | List', `ignore path | <example> linec -i './dist'` )
     .option('-p, --path [path]', `linec path | <example> linec -p './dist'`)
+    .option('-s, --suffix [name] | List', `linec name | <example> linec -s '.js'`)
     .option('-o, --output', 'ouput html | <example> linec -o')
     .parse(process.argv);
 
 if(program.output) {
     TYPE = 'html';
+}
+
+if(program.suffix) {
+    try {
+        const list = program.suffix.split(',');
+        suffixList.push(...list);
+    } catch(e) {
+        console.log(logSymbols.error, `linec -s <suffix> must have params'`.red);
+        process.exit(0);
+    }
 }
 
 if(program.path) {
