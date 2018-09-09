@@ -56,9 +56,8 @@ Usage: index [options]
 # 效果图
 基础模式
 
-![](https://user-gold-cdn.xitu.io/2018/8/14/165379c66b2f9078?w=838&h=376&f=jpeg&s=85593)
+<img src="http://s3.qiufengh.com/screenshot/linec1.png">
 
 导出后打开html
-
-![](https://user-gold-cdn.xitu.io/2018/8/15/1653c4067ee069e3?w=2056&h=918&f=jpeg&s=156918)
+<img src="http://s3.qiufengh.com/screenshot/linec2.png">
 
