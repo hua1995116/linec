@@ -62,3 +62,8 @@ Usage: index [options]
 
 ![](https://user-gold-cdn.xitu.io/2018/8/15/1653c4067ee069e3?w=2056&h=918&f=jpeg&s=156918)
 
+## License
+
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2018 蓝色的秋风
