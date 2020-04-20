@@ -349,7 +349,7 @@ function outputHtml(fileData, totalData) {
     body += '</div>'
 
     const bottom = `<div class="bottom"><div class="col col-4">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalCode}</div></div>`;
-    const readData = fs.readFileSync('./src/static/template.html').toString();
+    const readData = fs.readFileSync(path.join(__dirname, '../src/static/template.html')).toString();
     const ouputHtml = readData.replace('$',speed + header + body + bottom )
     const outputPath = `${process.cwd()}/linec_output.html`;
     fs.writeFileSync(outputPath, ouputHtml);
