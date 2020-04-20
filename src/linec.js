@@ -173,7 +173,7 @@ function initTable() {
 function hanldeTable(langInfo) {
     const tablesContent = [];
     let maxCount = 0;
-    let maxIndex = -1;
+    let maxIndex = 0;
     let maxName = null;
     let totalFiles = 0;
     let totalBlank = 0;
@@ -190,8 +190,11 @@ function hanldeTable(langInfo) {
         tablesContent.push([item, langInfo[item].file, langInfo[item].blankLines, langInfo[item].totalLines]);
     })
     const maxLine = tablesContent[maxIndex];
-    const colorMax = [maxLine[0].yellow, `${maxLine[1]}`.yellow, `${maxLine[2]}`.yellow, `${maxLine[3]}`.yellow]
-    tablesContent.splice(maxIndex, 1, colorMax);
+    if (maxLine) {
+        const colorMax = [maxLine[0].yellow, `${maxLine[1]}`.yellow, `${maxLine[2]}`.yellow, `${maxLine[3]}`.yellow]
+        tablesContent.splice(maxIndex, 1, colorMax);
+    }
+
     return {
         totalFiles,
         totalCode,
