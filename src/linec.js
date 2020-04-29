@@ -259,11 +259,15 @@ function getFile(dirPath, langInfo) {
     const files = fs.readdirSync(dirPath);
 
     files.forEach((item) => {
-
         const extname = path.extname(item).replace('\.', ''),
-            currentPath = path.join(dirPath, item),
+            currentPath = path.join(dirPath, item);
+        let isFile, isDir;
+        try {
             isFile = fs.statSync(currentPath).isFile(),
             isDir = fs.statSync(currentPath).isDirectory();
+        } catch (e) {
+            return;
+        }
         if (ignoreFilter(currentPath, filterCustom)) {
             return;
         }
@@ -362,11 +366,11 @@ function outputHtml(fileData, totalData) {
 /**
  *@desc main entry
  */
-function linec(type, path) {
-    const p = path || ROOTPATH;
+function linec(type, cpath) {
+    const p = cpath || ROOTPATH;
     const t = type || TYPE;
     try {
-        const currentPath = path.join(ROOTPATH, '.gitignore');
+        const currentPath = path.join(p, '.gitignore');
         const fileData = fs.readFileSync(currentPath, 'utf-8');
         ignoreList = fileData.split('\n');
         filterCustom.push(...ignoreList);
