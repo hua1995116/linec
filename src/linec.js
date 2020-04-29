@@ -13,6 +13,8 @@ let TYPE = 'table';
 let FILE_COUNT = 0;
 const filterCustom = [];
 const suffixList = [];
+// let ignoreList = [];
+
 
 const tableColWidths = [15, 10, 10, 10];
 const tableColAligns = ['left', 'right', 'right', 'right'];
@@ -363,6 +365,15 @@ function outputHtml(fileData, totalData) {
 function linec(type, path) {
     const p = path || ROOTPATH;
     const t = type || TYPE;
+    try {
+        const currentPath = path.join(ROOTPATH, '.gitignore');
+        const fileData = fs.readFileSync(currentPath, 'utf-8');
+        ignoreList = fileData.split('\n');
+        filterCustom.push(...ignoreList);
+    } catch (e) {
+
+    }
+
     const fileData = getFileData(p);
     const totalData = hanldeTable(fileData);
     let output = null;
