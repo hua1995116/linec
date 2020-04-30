@@ -13,7 +13,6 @@ let TYPE = 'table';
 let FILE_COUNT = 0;
 const filterCustom = [];
 const suffixList = [];
-// let ignoreList = [];
 
 
 const tableColWidths = [15, 10, 10, 10];
@@ -372,7 +371,7 @@ function linec(type, cpath) {
     try {
         const currentPath = path.join(p, '.gitignore');
         const fileData = fs.readFileSync(currentPath, 'utf-8');
-        ignoreList = fileData.split('\n');
+        const ignoreList = fileData.split('\n');
         filterCustom.push(...ignoreList);
     } catch (e) {
 
