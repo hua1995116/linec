@@ -181,7 +181,6 @@ function hanldeTable(langInfo) {
     let totalBlank = 0;
     let totalCode = 0;
     let totalComments = 0;
-    console.log(langInfo);
     Object.keys(langInfo).map((item, index) => {
         if (maxCount < langInfo[item].totalLines) {
             maxCount = langInfo[item].totalLines;
