@@ -6,6 +6,7 @@ const colors = require('colors');
 const logSymbols = require('log-symbols');
 const langColors = require('./static/colors');
 const langExt = require('./static/ext');
+const commentParser = require('common-comment-parser').default;
 const ignoreFilter = require('./utils/ignore');
 let ROOTPATH = process.cwd();
 const START_TIME = new Date();
@@ -15,9 +16,9 @@ const filterCustom = [];
 const suffixList = [];
 
 
-const tableColWidths = [15, 10, 10, 10];
-const tableColAligns = ['left', 'right', 'right', 'right'];
-const tableHead = ['language', 'files', 'blank', 'code']
+const tableColWidths = [15, 10, 10, 10, 10];
+const tableColAligns = ['left', 'right', 'right', 'right', 'right'];
+const tableHead = ['language', 'files', 'blank', 'comments', 'code']
 const tableStyle = {
     'padding-left': 0,
     'padding-right': 0,
@@ -179,6 +180,8 @@ function hanldeTable(langInfo) {
     let totalFiles = 0;
     let totalBlank = 0;
     let totalCode = 0;
+    let totalComments = 0;
+    console.log(langInfo);
     Object.keys(langInfo).map((item, index) => {
         if (maxCount < langInfo[item].totalLines) {
             maxCount = langInfo[item].totalLines;
@@ -188,11 +191,12 @@ function hanldeTable(langInfo) {
         totalFiles += langInfo[item].file;
         totalBlank += langInfo[item].blankLines;
         totalCode += langInfo[item].totalLines;
-        tablesContent.push([item, langInfo[item].file, langInfo[item].blankLines, langInfo[item].totalLines]);
+        totalComments += langInfo[item].commentLines;
+        tablesContent.push([item, langInfo[item].file, langInfo[item].blankLines, langInfo[item].commentLines, langInfo[item].totalLines]);
     })
     const maxLine = tablesContent[maxIndex];
     if (maxLine) {
-        const colorMax = [maxLine[0].yellow, `${maxLine[1]}`.yellow, `${maxLine[2]}`.yellow, `${maxLine[3]}`.yellow]
+        const colorMax = [maxLine[0].yellow, `${maxLine[1]}`.yellow, `${maxLine[2]}`.yellow, `${maxLine[3]}`.yellow, `${maxLine[4]}`.yellow]
         tablesContent.splice(maxIndex, 1, colorMax);
     }
 
@@ -200,6 +204,7 @@ function hanldeTable(langInfo) {
         totalFiles,
         totalCode,
         totalBlank,
+        totalComments,
         tablesContent,
         maxName
     }
@@ -219,10 +224,11 @@ function outputTbale(totalData) {
         totalFiles,
         totalCode,
         totalBlank,
+        totalComments,
         tablesContent
     } = totalData;
     content.push(...tablesContent);
-    bottom.push(['SUM'.cyan, `${totalFiles}`.cyan, `${totalBlank}`.cyan, `${totalCode}`.cyan]);
+    bottom.push(['SUM'.cyan, `${totalFiles}`.cyan, `${totalBlank}`.cyan, `${totalComments}`.cyan,`${totalCode}`.cyan]);
 
     const {
         totalTime,
@@ -282,6 +288,7 @@ function getFile(dirPath, langInfo) {
                     file: 1,
                     blankLines: 0,
                     totalLines: 0,
+                    commentLines: 0,
                     color: langColors[languageName] || '#fff'
                 }
             }
@@ -303,11 +310,15 @@ function fileCount(name, currentPath, langInfo) {
     if (FILE_COUNT % 100 === 0) {
         progress.setValue(FILE_COUNT);
     }
-    const lines = fs.readFileSync(currentPath, 'utf-8').split('\n');
+    const context = fs.readFileSync(currentPath, 'utf-8');
+    const ext = path.extname(currentPath).replace('.', '');
+    const lines = context.split(/(\n|\r)/);
     const rmLines = lines.filter(item => (item.trim() !== '' && item.trim() !== '\r'));
+    const commentLines = commentParser(context, ext).reduce((prev, current) => (prev + current.commentLine), 0);
     const blankLines = lines.length - rmLines.length;
     langInfo[name].totalLines += lines.length;
     langInfo[name].blankLines += blankLines;
+    langInfo[name].commentLines += commentLines;
 }
 
 /**
@@ -328,6 +339,7 @@ function outputHtml(fileData, totalData) {
         totalFiles,
         totalCode,
         totalBlank,
+        totalComments,
         maxName
     } = totalData;
 
@@ -337,7 +349,7 @@ function outputHtml(fileData, totalData) {
         lineSpeed
     } = handleSpeed(totalFiles);
     const speed = `<div class="speed">T=${totalTime} s, (${fileSpeed} files/s, ${lineSpeed} lines/s)</div>`
-    const header = `<div class="header"><div class="col col-4">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">code</div></div>`;
+    const header = `<div class="header"><div class="col col-2">language</div><div class="col col-2">files</div><div class="col col-2">blank</div><div class="col col-2">comments</div><div class="col col-2">code</div></div>`;
     let body = `<div class="body">`;
 
     Object.keys(fileData).map(item => {
@@ -348,12 +360,12 @@ function outputHtml(fileData, totalData) {
         } else {
             tr += `<div class="tr" style="color: ${languageItem.color}">`;
         }
-        tr += `<div class="col col-4"">${item}</div><div class="col col-2">${languageItem.file}</div><div class="col col-2">${languageItem.blankLines}</div><div class="col col-2">${languageItem.totalLines}</div></div>`;
+        tr += `<div class="col col-2"">${item}</div><div class="col col-2">${languageItem.file}</div><div class="col col-2">${languageItem.blankLines}</div><div class="col col-2">${languageItem.commentLines}</div><div class="col col-2">${languageItem.totalLines}</div></div>`;
         body += tr;
     })
     body += '</div>'
 
-    const bottom = `<div class="bottom"><div class="col col-4">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalCode}</div></div>`;
+    const bottom = `<div class="bottom"><div class="col col-2">SUM</div><div class="col col-2">${totalFiles}</div><div class="col col-2">${totalBlank}</div><div class="col col-2">${totalComments}</div><div class="col col-2">${totalCode}</div></div>`;
     const readData = fs.readFileSync(path.join(__dirname, '../src/static/template.html')).toString();
     const ouputHtml = readData.replace('$',speed + header + body + bottom )
     const outputPath = `${process.cwd()}/linec_output.html`;
