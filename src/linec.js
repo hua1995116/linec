@@ -311,9 +311,22 @@ function fileCount(name, currentPath, langInfo) {
     }
     const context = fs.readFileSync(currentPath, 'utf-8');
     const ext = path.extname(currentPath).replace('.', '');
-    const lines = context.split(/(\n|\r)/);
+    const lines = context.split('\n');
     const rmLines = lines.filter(item => (item.trim() !== '' && item.trim() !== '\r'));
-    const commentLines = commentParser(context, ext).reduce((prev, current) => (prev + current.commentLine), 0);
+    const singleLine = [];
+    let commentLines = 0;
+    commentParser(context, ext).forEach(item => {
+        if (item.loc.end.line === item.loc.start.line) {
+            if (singleLine.includes(item.loc.start.line)) {
+                return;
+            }
+            singleLine.push(item.loc.start.line);
+            commentLines++;
+            return;
+        }
+        commentLines += (item.loc.end.line - item.loc.start.line + 1);
+    })
+
     const blankLines = lines.length - rmLines.length;
     langInfo[name].totalLines += lines.length;
     langInfo[name].blankLines += blankLines;
