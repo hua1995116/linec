@@ -56,10 +56,10 @@ Usage: index [options]
 # 效果图
 基础模式
 
-<img src="http://s3.qiufengh.com/screenshot/linec1.png">
+<img src="http://s3.qiufeng.blue/screenshot/linec1.png">
 
 导出后打开html
-<img src="http://s3.qiufengh.com/screenshot/linec2.png">
+<img src="http://s3.qiufeng.blue/screenshot/linec2.png">
 
 ## License
 
