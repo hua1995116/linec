@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img height="300" src="http://cloud.qiufengh.com/md/linec.png" alt="linec" />
+    linec
 </h1>
 <p align="center">
     <a href="https://travis-ci.org/hua1995116/linec"><img src="https://travis-ci.org/hua1995116/linec.svg?branch=master" /></a>
